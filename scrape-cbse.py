@@ -3,7 +3,7 @@ from mechanize import Browser
 import sys
 from bs4 import BeautifulSoup
 
-def main(a1,a2,outfile):
+def main(a1,a2):
 	data = []
 	b=Browser()
 	for rn in range(a1,a2+1):
@@ -13,16 +13,14 @@ def main(a1,a2,outfile):
 		b["regno"]=str(rn)
 		resp=b.submit()
 		cont=resp.read()
-		soup=BeautifulSoup(cont);
+		soup=BeautifulSoup(cont)
 		soup.prettify("utf-8")
-		cont=soup.get_text();
+		cont=soup.get_text()
 		cont=cont[cont.index("Roll"):cont.index("Check")]
 		cont=cont.encode("UTF-8").strip() 
 
 		data.append(cont)
-	
-	with open(outfile,'w') as f:
-		f.write('\n ----------------------------------------- \n'.join(data))
+	return data
 
 if __name__ == "__main__":
 	arglen = len(sys.argv)
@@ -31,8 +29,13 @@ if __name__ == "__main__":
 	else :
 		a1 = int(sys.argv[1])
 		a2 = int(sys.argv[2])
+		data =  main(a1,a2)
 		if arglen == 4 : 
 			outfile =  sys.argv[3]
+			with open(outfile,'w') as f:
+				f.write('\n ----------------------------------------- \n'.join(data))
 		elif arglen == 3:
-			outfile = sys.stdout;
-		main(a1,a2,outfile)
+			print '\n ----------------------------------------- \n'.join(data)
+			
+		
+		
